@@ -43,10 +43,18 @@
 	
 	\section{Requirements}
 	\begin{enumerate}
+		\item Report 50 points
+		\begin{enumerate}
 		\item 20 points for clearly describing your algorithm for solving the problem
 		\item 10 points for making the argument that your algorithm is in some sense optimal
 		\item 10 points for fair share of the
 		work load
+		\end{enumerate}
+		\item Coding 100 points
+		\begin{enumerate}
+		\item 80 points for achieving the goal of bringing the pendulum to within tolerance of an unstable steady state within a reasonable amount of time
+		\item 20 points for optimality
+		\end{enumerate}
 	\end{enumerate}
 	
 	
@@ -99,10 +107,7 @@
 	Next, we implement a function called \texttt{rickshaw} which takes in parameters $tv$ (an array of time values), $X0$ (initial conditions on the state variables), $A$, $B$, $Q$, $R$ (which we get from \texttt{linearized\_init}), and a matrix $P$. $P$ is calculated using \texttt{scipy.linalg.solve\_continuous} \texttt{\_are} which solves the algebraic Riccati equation given $A$, $B$, $Q$, and $R$. \texttt{rickshaw} is a Linear Quadratic Regulator which will calculate and return the optimal control $U$ and the optimal state vector $Z$. This is all done inside our function \texttt{stabilize}.\\\\
 	To stabilize the rod on the cart vertically, we first initialize $X0$ using \texttt{env.reset()}. We give it our optimized $q$s and $r$ that will be explained in the next section. We get $Z$ and $U$ using our \texttt{stabilize} function. Then, for each step in time (.02 seconds), we take the observation from \texttt{env.step()} on the first element of $U$, use it to contruct a new $X0$, then call \texttt{stabilize} for a new $U$ and $Z$. $U$ actually calculates the expected optimal controls for the rest of time, however we update after taking each next step. So, we use the first element of $U$ in each iteration.
 	
-	\section{What Makes it Optimal?}
-	\hl{Talk about why LQR is good and what Brooke did to choose parameters}\\
-	We chose to use the LQR algorithm because it is like an automated method for us to find the state-feedback controller. So it gives us very efficient feedback gains.
-	
-	
+	\section{What Makes it Optimal?}	
+	To optimize our method, we used the LQR algorithm. The algorithm is an automated method to find the state-feedback controller, which gives very efficient feedback gains. Choosing the best parameters for our algorithm was very time consuming and required implementing our algorithm as a sklearn object. After creating our method as a sklearn object, we were able to run GridSearchCV to optimize over all parameters, q1, q2, q3, q4, and r to get the parameters the yielded the least amount of iterations. q1 was left as zero, because this parameter determines where the pendulum is balanced, which is not a parameter that is important in our case. Because we are using the parameters the yield the least iterations, our method has been optimized.
 	
 \end{document}
